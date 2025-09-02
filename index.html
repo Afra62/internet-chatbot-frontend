@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Question Answer Bot</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; }
+    input, button, textarea { width: 100%; margin-top: 10px; padding: 10px; }
+    button { background: #007bff; color: white; border: none; cursor: pointer; }
+    button:hover { background: #0056b3; }
+  </style>
+</head>
+<body>
+  <h2>Ask Your Question</h2>
+  <input type="text" id="question" placeholder="Type your question here..." />
+  <button onclick="askQuestion()">Ask</button>
+  <h3>Answer:</h3>
+  <textarea id="answer" rows="6" readonly></textarea>
+
+  <script>
+    async function askQuestion() {
+      const question = document.getElementById('question').value;
+      const responseBox = document.getElementById('answer');
+      responseBox.value = "Thinking...";
+
+      try {
+        const response = await fetch("http://127.0.0.1:8000", { // replace with your backend URL
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question })
+        });
+
+        const data = await response.json();
+        responseBox.value = data.answer || data.error || "No response received.";
+      } catch (err) {
+        responseBox.value = "Error: " + err.message;
+      }
+    }
+  </script>
+</body>
+</html>
